@@ -1,5 +1,6 @@
 let contador = 0;
 let costoTotal = 0; // variable global que se le agrega el precio * cantidad
+let totalEnProductos = 0;
 let element = document.getElementById("totalPrecio");
 element.innerHTML = "Total en precio";  // Se cambió el texto de html desde este documento de JS
 
@@ -88,6 +89,8 @@ agregar.addEventListener ("click", (event) => {  // Evento al que voy a responde
     document.getElementById("contadorProductos").innerHTML= contador;
     let precio = (Math.floor((Math.random() * 50)*100))/100; // math.random por default solo da decimales
     let cantidad = parseFloat(txtNumber.value);  // Para convertir a número
+    totalEnProductos += (cantidad<1)?Math.ceil(cantidad):parseInt(cantidad); // Si cantidad es menor a 1 lo convierto a ceil, en otro caso, nada más convierto la parte entera
+    document.getElementById("productosTotal").innerHTML = totalEnProductos;
     costoTotal += (precio * cantidad);
     total.innerHTML = `$ ${costoTotal.toFixed(2)}`;
     let tmp = `<tr>
@@ -96,12 +99,10 @@ agregar.addEventListener ("click", (event) => {  // Evento al que voy a responde
 <td>${txtNumber.value}</td>
 <td>$ ${precio}</td>  
 </tr> `; // number.tofixed(#) para indicar cuantos dígitos aparecendespués del punto
-    console.log(tmp);
     cuerpoTabla[0].innerHTML += tmp;  // Cada vez que añadamos algo, se va a volver a hacer lo que hace el tmp, en el único tbody que hay
     txtNumber.value="";
     txtNombre.value=""; // limpia formulario
     txtNombre.focus();
-    Total.value=""
     }
 );
 
