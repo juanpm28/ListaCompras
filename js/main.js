@@ -87,12 +87,15 @@ agregar.addEventListener ("click", (event) => {  // Evento al que voy a responde
     document.getElementById("alertValidaciones").style.display="none";
     contador++; // para andar aumentando el contador de productos
     document.getElementById("contadorProductos").innerHTML= contador;
+    localStorage.setItem ("contadorProductos", contador);// Nombre de la llave, y variable window = objeto para acceder a propiedades del navegador, no es necesario aqui
     let precio = (Math.floor((Math.random() * 50)*100))/100; // math.random por default solo da decimales
     let cantidad = parseFloat(txtNumber.value);  // Para convertir a número
     totalEnProductos += (cantidad<1)?Math.ceil(cantidad):parseInt(cantidad); // Si cantidad es menor a 1 lo convierto a ceil, en otro caso, nada más convierto la parte entera
     document.getElementById("productosTotal").innerHTML = totalEnProductos;
+    localStorage.setItem ("productosTotal", totalEnProductos);
     costoTotal += (precio * cantidad);
     total.innerHTML = `$ ${costoTotal.toFixed(2)}`;
+    localStorage.setItem ("precioTotal", costoTotal.toFixed(2));
     let tmp = `<tr>
 <th scope="row">${contador}</th>
 <td>${txtNombre.value}</td>
@@ -115,6 +118,24 @@ txtNumber.addEventListener("blur", (event) => {  // blur: las instrucciones se e
     event.target.value = event.target.value.trim();
 }
 );
+
+
+window.addEventListener("load", function() {   // funcion anónima
+
+    if (localStorage.getItem ("contadorProductos")!=null) {
+        contador = parseInt(localStorage.getItem ("contadorProductos"));
+        document.getElementById("contadorProductos").innerHTML=contador;
+    } // if contadorProductos
+    if (localStorage.getItem ("productosTotal")) {
+        totalEnProductos = parseInt(localStorage.getItem ("productosTotal"));
+        document.getElementById("productosTotal").innerHTML=totalEnProductos;
+    } // if productosTotal
+    if (localStorage.getItem ("precioTotal")) {
+        costoTotal = parseInt(localStorage.getItem ("precioTotal"));
+        total.innerHTML=costoTotal;
+} // if precioTotal
+}
+); // cuando termina de ejecutarse la pagina se ejecuta el evento load de la ventana
 
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/blur_event
