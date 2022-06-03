@@ -1,6 +1,9 @@
 let contador = 0;
 let costoTotal = 0; // variable global que se le agrega el precio * cantidad
 let totalEnProductos = 0;
+// Arreglo global para almacenar la lista de compras
+let datos = [];
+
 let element = document.getElementById("totalPrecio");
 element.innerHTML = "Total en precio";  // Se cambió el texto de html desde este documento de JS
 
@@ -96,12 +99,28 @@ agregar.addEventListener ("click", (event) => {  // Evento al que voy a responde
     costoTotal += (precio * cantidad);
     total.innerHTML = `$ ${costoTotal.toFixed(2)}`;
     localStorage.setItem ("precioTotal", costoTotal.toFixed(2));
+
+    // json
+    let elemento = `{"id":${contador}, 
+    "nombre":"${txtNombre.value}", 
+    "cantidad":${txtNumber.value}, 
+    "precio":${precio}
+    }`;  // definicion de un objeto tipo JSON, { "nombre" : valor }  // Si la variable es string se tiene que poner entre comillas
+
+    datos.push(JSON.parse(elemento));  // Es una cadena de texto y lo convierte a objeto, conversión
+
+    localStorage.setItem("elementosTabla", JSON.stringify(datos));  // Se va a cadenizar el arreglo que es un objeto, se convertirá a cadena 
+    // En localStorage oslo se puede almacenar texto
+    // localStorage.setItem("Nombre que irá en el Key", valor del key); 
+
+    console.log(datos);
+
     let tmp = `<tr>
-<th scope="row">${contador}</th>
-<td>${txtNombre.value}</td>
-<td>${txtNumber.value}</td>
-<td>$ ${precio}</td>  
-</tr> `; // number.tofixed(#) para indicar cuantos dígitos aparecendespués del punto
+    <th scope="row">${contador}</th>
+    <td>${txtNombre.value}</td>
+    <td>${txtNumber.value}</td>
+    <td>$ ${precio}</td>  
+    </tr> `; // number.tofixed(#) para indicar cuantos dígitos aparecendespués del punto
     cuerpoTabla[0].innerHTML += tmp;  // Cada vez que añadamos algo, se va a volver a hacer lo que hace el tmp, en el único tbody que hay
     txtNumber.value="";
     txtNombre.value=""; // limpia formulario
@@ -134,6 +153,20 @@ window.addEventListener("load", function() {   // funcion anónima
         costoTotal = parseInt(localStorage.getItem ("precioTotal"));
         total.innerHTML=costoTotal;
 } // if precioTotal
+
+if (localStorage.getItem("elementosTabla")!=null) {
+datos = JSON.parse(localStorage.getItem("elementosTabla"));
+datos.forEach(element => {
+    cuerpoTabla[0].innerHTML += `<tr>
+    <th scope="row">${element.id}</th>
+    <td>${element.nombres}</td>
+    <td>${element.cantidad}</td>
+    <td>$ ${element.precio}</td>  
+    </tr> `;
+});
+
+} // if elementosTablas es un arreglo de objetos 
+
 }
 ); // cuando termina de ejecutarse la pagina se ejecuta el evento load de la ventana
 
